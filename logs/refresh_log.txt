@@ -1,0 +1,9 @@
+2026-11-16T23:23:45Z OK   Federal Reserve H.10: usdcny=2966pts latest=2026-11-13
+2026-11-16T23:23:45Z OK   BIS: reer=141pts latest=2026-09, neer=141pts latest=2026-09, policy_cn=142pts latest=2026-10, policy_us=142pts latest=2026-10
+2026-11-16T23:23:45Z OK   OECD: y10_cn=141pts latest=2026-09, y10_us=142pts latest=2026-10, cpi_cn=142pts latest=2026-10, cpi_us=140pts latest=2026-09
+2026-11-16T23:23:45Z OK   World Bank: prod_cn=15pts latest=2025, prod_cn_level=16pts latest=2025, prod_us=15pts latest=2025, prod_us_level=16pts latest=2025
+2026-11-16T23:23:45Z NBS crawl: 35 index pages, 40 new release pages, 30 PMI obs, 10 GDP obs
+2026-11-16T23:23:45Z OK   NBS China: pmi=30pts latest=2026-10, gdp=10pts latest=2026-Q3
+2026-11-16T23:23:45Z OK   daily 10Y: us10y_daily=5.12 (2026-11-16), cn10y_daily=1.6285 (2026-11-16)
+2026-11-16T23:23:45Z RESULT all_sources_ok=True
+---

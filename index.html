@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>China FX &amp; Rates Monitor</title>
+<meta name="description" content="Monitoring the renminbi: exchange rates, real exchange rate, interest-rate and inflation gaps with the US, and growth indicators. Auto-refreshed from primary sources.">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11,11,11,.10);
+  --c-cn: #2a78d6;  /* slot 1: China / RMB */
+  --c-us: #eb6834;  /* slot 2: United States */
+  --c-x:  #1baf7a;  /* slot 3: second China measure / derived */
+  --good: #006300; --warn-bg: #fff4d6; --warn-ink: #7a5200; --bad: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,.10);
+    --c-cn: #3987e5; --c-us: #d95926; --c-x: #199e70;
+    --good: #0ca30c; --warn-bg: #3a2f10; --warn-ink: #f3d78a; --bad: #e66767;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19;
+  --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,.10);
+  --c-cn: #3987e5; --c-us: #d95926; --c-x: #199e70;
+  --good: #0ca30c; --warn-bg: #3a2f10; --warn-ink: #f3d78a; --bad: #e66767;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: inherit; text-decoration-color: var(--axis); text-underline-offset: 2px; }
+a:hover { text-decoration-color: var(--ink-2); }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+header { display: flex; gap: 16px; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; }
+h1 { font-size: 26px; line-height: 1.2; margin: 0 0 6px; font-weight: 650; }
+.q { color: var(--ink-2); max-width: 720px; margin: 0; }
+.tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.seg { display: inline-flex; border: 1px solid var(--ring); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button, .btn { font: inherit; font-size: 13px; padding: 6px 12px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--ring); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.btn { border: 1px solid var(--ring); border-radius: 8px; background: var(--surface); }
+button:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--c-cn); outline-offset: 2px; }
+
+.fresh { margin: 18px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 14px 16px; }
+.fresh .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.fresh .v { font-size: 17px; font-weight: 600; margin-top: 2px; }
+.fresh .s { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; }
+.status i { font-style: normal; font-weight: 700; }
+.ok i { color: var(--good); } .fail i { color: var(--bad); }
+.srcs { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; }
+.stale { background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: 8px 12px; margin-top: 12px; font-size: 13.5px; display: none; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 18px 0; }
+.tile .k { font-size: 12.5px; color: var(--ink-2); }
+.tile .v { font-size: 28px; font-weight: 600; line-height: 1.2; margin-top: 2px; }
+.tile .d { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+.read { margin: 0 0 18px; }
+.read h2 { font-size: 16px; margin: 0 0 6px; }
+.read ul { margin: 0; padding-left: 20px; color: var(--ink-2); }
+.read li { margin: 3px 0; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.grid .wide { grid-column: 1 / -1; }
+.chart-card h3 { font-size: 15px; margin: 0; font-weight: 650; }
+.chart-card .tag { font-size: 11.5px; font-weight: 500; color: var(--ink-2); border: 1px solid var(--ring); border-radius: 999px; padding: 1px 8px; margin-left: 6px; white-space: nowrap; }
+.chart-card .take { font-size: 13.5px; color: var(--ink-2); margin: 4px 0 6px; min-height: 40px; }
+.chart { width: 100%; height: 300px; }
+.meta { margin: 8px 0 0; font-size: 12px; color: var(--muted); display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; }
+.meta dt { color: var(--muted); } .meta dd { margin: 0; color: var(--ink-2); }
+details { margin-top: 8px; font-size: 12.5px; }
+summary { cursor: pointer; color: var(--ink-2); width: fit-content; }
+table { border-collapse: collapse; margin-top: 6px; width: 100%; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 3px 8px; border-bottom: 1px solid var(--grid); }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--ink-2); font-weight: 600; }
+.note { font-size: 13px; color: var(--ink-2); }
+footer { margin-top: 28px; font-size: 13px; color: var(--ink-2); }
+footer h2 { font-size: 15px; margin: 18px 0 6px; color: var(--ink); }
+footer li { margin: 3px 0; }
+@media (max-width: 860px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 22px; } .chart { height: 270px; } }
+@media (forced-colors: active) { .seg button[aria-pressed="true"] { outline: 2px solid; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>China FX &amp; Rates Monitor</h1>
+      <p class="q">Is the renminbi under depreciation pressure, and how do interest-rate and inflation gaps with the United States shape its nominal and real value?</p>
+    </div>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="Time range">
+        <button data-range="2" aria-pressed="false">2Y</button>
+        <button data-range="5" aria-pressed="true">5Y</button>
+        <button data-range="0" aria-pressed="false">Max</button>
+      </div>
+      <button class="btn" id="theme" aria-label="Toggle colour theme">Theme: auto</button>
+    </div>
+  </header>
+
+  <section class="fresh" aria-label="Data freshness">
+    <div class="card">
+      <div class="k">Last successful refresh</div>
+      <div class="v" id="refresh-local">…</div>
+      <div class="s" id="refresh-utc"></div>
+      <div class="s">When the update job last fetched every source without error. This is <b>not</b> the date of the data.</div>
+    </div>
+    <div class="card">
+      <div class="k">Source status (last run)</div>
+      <div class="srcs" id="src-status"></div>
+      <div class="s" id="attempt"></div>
+    </div>
+    <div class="card">
+      <div class="k">Latest daily 10-year yields</div>
+      <div class="v" id="spot-v">…</div>
+      <div class="s" id="spot-s"></div>
+    </div>
+  </section>
+  <div class="stale" id="stale" role="status"></div>
+
+  <section class="tiles" id="tiles" aria-label="Latest readings"></section>
+
+  <section class="card read" aria-label="Reading the data">
+    <h2>What the latest data say</h2>
+    <ul id="reading"></ul>
+  </section>
+
+  <main class="grid" id="grid"></main>
+
+  <footer>
+    <h2>How to read this page</h2>
+    <ul>
+      <li><b>Two different conventions for the exchange rate.</b> USD/CNY is quoted as yuan per 1 US dollar: a <i>rising</i> line means the RMB is <i>weakening</i>. BIS effective exchange rate indices (REER, NEER) are the opposite: a <i>rising</i> line means the RMB is <i>strengthening</i>.</li>
+      <li><b>Latest observation vs refresh time.</b> Each chart shows the date of its newest data point; the page header shows when the job last ran successfully. Sources publish at different lags, so a successful refresh may add no new points.</li>
+      <li><b>Uncovered interest parity (UIP) check.</b> Implied change = (1 + y<sub>CN</sub>) / (1 + y<sub>US</sub>) − 1 using 10-year yields; realised change = USD/CNY twelve months later vs now. A gap between the two is the "carry" that UIP says should not persist.</li>
+      <li><b>Real exchange rate.</b> BIS REER deflates trade-weighted nominal rates with relative consumer prices, so it moves with both the nominal rate and the China–partner inflation gap. Productivity growth differentials matter for the long-run real rate (Balassa–Samuelson).</li>
+      <li>NBS PMI and GDP are read from the National Bureau of Statistics English release pages (its data portal blocks automated access); history starts where those pages are available.</li>
+      <li>Data file: <a href="data/series.json">data/series.json</a> · Refresh log: <a href="logs/refresh_log.txt">logs/refresh_log.txt</a> · Verification: <a href="docs/VERIFICATION.md">docs/VERIFICATION.md</a></li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+"use strict";
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+let DATA = null, S = null, RANGE = 5;
+const charts = [];
+
+// ---------- helpers
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const pts = id => (S[id] ? S[id].points : []);
+const last = a => a[a.length - 1];
+const fmt = (v, d = 2) => (v == null || isNaN(v)) ? "–" : Number(v).toFixed(d);
+function fmtDate(s) {
+  if (!s) return "–";
+  let m;
+  if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/))) return `${+m[3]} ${MON[+m[2]-1]} ${m[1]}`;
+  if ((m = s.match(/^(\d{4})-(\d{2})$/))) return `${MON[+m[2]-1]} ${m[1]}`;
+  if ((m = s.match(/^(\d{4})-Q(\d)$/))) return `Q${m[2]} ${m[1]}`;
+  return s;
+}
+function addMonths(s, n) { // 'YYYY-MM[-DD]' -> 'YYYY-MM'
+  const y = +s.slice(0,4), m = +s.slice(5,7) - 1 + n;
+  const yy = y + Math.floor(m / 12), mm = ((m % 12) + 12) % 12;
+  return `${yy}-${String(mm+1).padStart(2,"0")}`;
+}
+function cut(a) { // apply the global time range (long monthly/daily series only)
+  if (!RANGE || !a.length) return a;
+  const start = addMonths(last(a)[0], -12 * RANGE);
+  return a.filter(p => p[0].slice(0,7) >= start);
+}
+function valAtOrBefore(a, key) { let r = null; for (const p of a) { if (p[0] <= key) r = p; else break; } return r; }
+function changeOver(a, months) { // pct change over N months
+  const l = last(a), prev = valAtOrBefore(a, addMonths(l[0], -months) + "-31");
+  return prev ? { pct: (l[1] / prev[1] - 1) * 100, diff: l[1] - prev[1], from: prev } : null;
+}
+const sign = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(1);
+
+// ---------- chart construction
+function base(opts = {}) {
+  const ink2 = css("--ink-2"), muted = css("--muted"), grid = css("--grid"), axis = css("--axis"), surface = css("--surface");
+  return {
+    animation: false,
+    textStyle: { color: ink2, fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif", fontSize: 12 },
+    grid: { left: 8, right: opts.right ?? 84, top: opts.legend ? 34 : 14, bottom: 6, containLabel: true },
+    legend: opts.legend ? { top: 0, left: 0, icon: "roundRect", itemWidth: 14, itemHeight: 4, textStyle: { color: ink2 }, itemGap: 18 } : { show: false },
+    tooltip: {
+      trigger: "axis", confine: true, backgroundColor: surface, borderColor: grid, borderWidth: 1,
+      textStyle: { color: css("--ink"), fontSize: 12.5 },
+      axisPointer: { type: "cross", lineStyle: { color: axis, type: "solid" }, crossStyle: { color: axis }, label: { show: false } },
+      formatter: opts.tip || defaultTip(opts.dec ?? 2, opts.unit || "")
+    },
+    xAxis: Object.assign({ type: "time", axisLine: { lineStyle: { color: axis } }, axisTick: { show: false },
+      axisLabel: { color: muted, hideOverlap: true }, splitLine: { show: false } }, opts.x || {}),
+    yAxis: Object.assign({ type: "value", scale: !!opts.scale, axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: muted, formatter: v => (opts.yfmt ? opts.yfmt(v) : v) },
+      splitLine: { lineStyle: { color: grid } } }, opts.y || {}),
+    series: []
+  };
+}
+function defaultTip(dec, unit) {
+  return ps => {
+    const t = Array.isArray(ps) ? ps : [ps];
+    const head = fmtDate(String(t[0].value[0]).length > 10 ? isoOf(t[0].value[0]) : t[0].value[0]);
+    return `<div style="font-weight:600;margin-bottom:3px">${head}</div>` + t.map(p =>
+      `<div><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${p.color};margin-right:6px"></span>${p.seriesName}: <b>${fmt(p.value[1], dec)}${unit}</b></div>`).join("");
+  };
+}
+const isoOf = ms => new Date(ms).toISOString().slice(0,10);
+function line(name, a, color, o = {}) {
+  return Object.assign({
+    name, type: "line", data: a, showSymbol: false, symbol: "circle", symbolSize: 8,
+    lineStyle: { width: 2, color }, itemStyle: { color, borderColor: css("--surface"), borderWidth: 2 },
+    emphasis: { focus: "none", scale: true },
+    endLabel: { show: true, formatter: p => `${o.short || name} ${fmt(p.value[1], o.dec ?? 2)}`, color: css("--ink-2"), fontSize: 12, distance: 6 }
+  }, o.extra || {});
+}
+function zeroLine(v, label) {
+  return { silent: true, symbol: "none", label: { show: !!label, formatter: label || "", color: css("--muted"), position: "insideStartTop", fontSize: 11 },
+    lineStyle: { color: css("--axis"), type: "dashed", width: 1 }, data: [{ yAxis: v }] };
+}
+
+// ---------- card registry
+const CARDS = [
+  { id: "usdcny", title: "USD/CNY exchange rate", tag: "↑ = RMB weaker", ids: ["usdcny"], wide: true,
+    take: () => { const a = pts("usdcny"), l = last(a), c = changeOver(a, 12), c5 = changeOver(a, 60);
+      return `${fmt(l[1], 4)} yuan per US dollar on ${fmtDate(l[0])}; ${c ? sign(c.pct) + "% over 12 months" : ""}${c5 ? `, ${sign(c5.pct)}% over 5 years (positive = RMB weaker)` : ""}.`; },
+    build() { const o = base({ right: 128, dec: 4, scale: true });
+      o.series = [ line("USD/CNY", cut(pts("usdcny")), css("--c-cn"), { dec: 4, short: "USD/CNY" }) ]; return o; } },
+  { id: "eer", title: "RMB effective exchange rates (BIS)", tag: "↑ = RMB stronger", ids: ["reer","neer"],
+    take: () => { const r = pts("reer"), n = pts("neer"), cr = changeOver(r, 12), cn = changeOver(n, 12);
+      return `Real index ${fmt(last(r)[1], 1)} (${cr ? sign(cr.pct) + "% over 12m" : ""}); nominal index ${fmt(last(n)[1], 1)} (${cn ? sign(cn.pct) + "% over 12m" : ""}). Real below nominal means China's prices have risen less than its partners'.`; },
+    build() { const o = base({ legend: true, scale: true, dec: 1, right: 110 });
+      o.series = [ line("Real (REER)", cut(pts("reer")), css("--c-cn"), { dec: 1, short: "REER" }),
+                   line("Nominal (NEER)", cut(pts("neer")), css("--c-x"), { dec: 1, short: "NEER" }) ];
+      o.series[0].markLine = zeroLine(100, "2020 = 100"); return o; } },
+  { id: "policy", title: "Policy interest rates", tag: "% p.a.", ids: ["policy_cn","policy_us"],
+    take: () => { const c = last(pts("policy_cn")), u = last(pts("policy_us"));
+      return `China ${fmt(c[1], 2)}% vs US ${fmt(u[1], 3)}% in ${fmtDate(c[0])}: a gap of ${fmt(u[1] - c[1], 2)} points in the US's favour. China's rate is the 1-year Loan Prime Rate; the US rate is the fed funds target.`; },
+    build() { const o = base({ legend: true, dec: 2, unit: "%", yfmt: v => v + "%" });
+      o.series = [ line("China (1y LPR)", cut(pts("policy_cn")), css("--c-cn"), { short: "China", extra: { step: "end" } }),
+                   line("United States (fed funds)", cut(pts("policy_us")), css("--c-us"), { short: "US", dec: 2, extra: { step: "end" } }) ];
+      o.series[0].markLine = zeroLine(0); return o; } },
+  { id: "yields", title: "10-year government bond yields", tag: "% p.a.", ids: ["y10_cn","y10_us"],
+    take: () => { const c = last(pts("y10_cn")), u = last(pts("y10_us")); const sp = last(pts("spread_10y"));
+      return `Monthly average ${fmtDate(c[0])}: China ${fmt(c[1], 2)}%, US ${fmt(u[1], 2)}%, a spread of ${fmt(sp[1], 2)} points. Latest daily readings are in the header.`; },
+    build() { const o = base({ legend: true, dec: 2, unit: "%", yfmt: v => v + "%" });
+      o.series = [ line("China", cut(pts("y10_cn")), css("--c-cn"), { short: "China" }),
+                   line("United States", cut(pts("y10_us")), css("--c-us"), { short: "US" }) ];
+      o.series[0].markLine = zeroLine(0); return o; } },
+  { id: "uip", title: "UIP check: implied vs realised USD/CNY change", tag: "derived · ↑ = RMB weaker", ids: ["uip_implied","realised_12m"], wide: true,
+    take: () => { const i = last(pts("uip_implied")), r = last(pts("realised_12m"));
+      return `With China's 10-year yield below the US's, UIP implies USD/CNY should fall (RMB strengthen) by ${fmt(Math.abs(i[1]), 1)}% a year (${fmtDate(i[0])}). Over the 12 months to ${fmtDate(addMonths(r[0], 12))} the rate actually moved ${sign(r[1])}%, so the RMB ended up ${r[1] < i[1] ? "stronger" : "weaker"} than the parity benchmark.`; },
+    build() { const o = base({ legend: true, dec: 1, unit: "%", right: 150, yfmt: v => v + "%" });
+      o.series = [ line("UIP-implied change (from yield gap)", cut(pts("uip_implied")), css("--c-x"), { short: "Implied", dec: 1 }),
+                   line("Realised change over next 12 months", cut(pts("realised_12m")), css("--c-cn"), { short: "Realised", dec: 1 }) ];
+      o.series[0].markLine = zeroLine(0); return o; } },
+  { id: "cpi", title: "Consumer price inflation", tag: "% y/y", ids: ["cpi_cn","cpi_us"],
+    take: () => { const c = last(pts("cpi_cn")), u = last(pts("cpi_us")); const g = last(pts("cpi_gap"));
+      return `China ${fmt(c[1], 1)}% (${fmtDate(c[0])}) vs US ${fmt(u[1], 1)}% (${fmtDate(u[0])}). Inflation gap (China − US) ${sign(g[1])} points in ${fmtDate(g[0])}: a lower China rate pushes the real exchange rate down over time.`; },
+    build() { const o = base({ legend: true, dec: 1, unit: "%", yfmt: v => v + "%" });
+      o.series = [ line("China", cut(pts("cpi_cn")), css("--c-cn"), { short: "China", dec: 1 }),
+                   line("United States", cut(pts("cpi_us")), css("--c-us"), { short: "US", dec: 1 }) ];
+      o.series[0].markLine = zeroLine(0); return o; } },
+  { id: "gdp", title: "China real GDP growth", tag: "% y/y · quarterly", ids: ["gdp"],
+    take: () => { const a = pts("gdp"), l = last(a); return `${fmt(l[1], 1)}% year on year in ${fmtDate(l[0])}. Sample starts where NBS English release pages are available.`; },
+    build() { const a = pts("gdp"); const o = base({ right: 14, dec: 1, unit: "%", yfmt: v => v + "%",
+        x: { type: "category", data: a.map(p => p[0].replace("-", " ")) },
+        tip: ps => { const p = Array.isArray(ps) ? ps[0] : ps; return `<b>${p.name}</b><br>China GDP: <b>${fmt(p.value, 1)}%</b> y/y`; } });
+      o.tooltip.axisPointer = { type: "shadow", shadowStyle: { color: css("--grid"), opacity: .5 } };
+      o.series = [ { name: "China GDP growth", type: "bar", barMaxWidth: 34, itemStyle: { color: css("--c-cn"), borderRadius: [4,4,0,0] },
+        data: a.map((p, i) => i === a.length - 1
+          ? { value: p[1], label: { show: true, position: "top", formatter: fmt(p[1], 1) + "%", color: css("--ink"), fontSize: 12 } }
+          : p[1]) } ];
+      return o; } },
+  { id: "pmi", title: "Official manufacturing PMI", tag: "index, 50 = no change", ids: ["pmi"],
+    take: () => { const a = pts("pmi"), l = last(a), p = a[a.length - 2]; return `${fmt(l[1], 1)} in ${fmtDate(l[0])} (${fmt(l[1] - p[1], 1)} vs prior month), ${l[1] >= 50 ? "above" : "below"} the 50 line that separates expansion from contraction.`; },
+    build() { const o = base({ right: 70, dec: 1, scale: true, y: { min: 48, max: 52, scale: true } });
+      o.series = [ line("Manufacturing PMI", pts("pmi"), css("--c-cn"), { dec: 1, short: "PMI" }) ];
+      o.series[0].markLine = zeroLine(50, "50 = no change"); return o; } },
+  { id: "prod", title: "Labour productivity growth", tag: "% y/y · annual", ids: ["prod_cn","prod_us"], wide: true,
+    take: () => { const c = last(pts("prod_cn")), u = last(pts("prod_us"));
+      return `GDP per person employed grew ${fmt(c[1], 1)}% in China vs ${fmt(u[1], 1)}% in the US in ${c[0]}. Faster productivity growth in tradables is the classic driver of real appreciation (Balassa–Samuelson).`; },
+    build() { const c = pts("prod_cn"), u = pts("prod_us"); const yrs = c.map(p => p[0]);
+      const uMap = Object.fromEntries(u);
+      const o = base({ legend: true, right: 14, dec: 1, unit: "%", yfmt: v => v + "%",
+        x: { type: "category", data: yrs },
+        tip: ps => `<b>${ps[0].name}</b>` + ps.map(p => `<br><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${p.color};margin-right:6px"></span>${p.seriesName}: <b>${fmt(p.value, 1)}%</b>`).join("") });
+      o.tooltip.axisPointer = { type: "shadow", shadowStyle: { color: css("--grid"), opacity: .5 } };
+      o.series = [ { name: "China", type: "bar", data: c.map(p => p[1]), barMaxWidth: 22, itemStyle: { color: css("--c-cn"), borderRadius: [4,4,0,0], borderColor: css("--surface"), borderWidth: 1 } },
+                   { name: "United States", type: "bar", data: yrs.map(y => uMap[y] ?? null), barMaxWidth: 22, itemStyle: { color: css("--c-us"), borderRadius: [4,4,0,0], borderColor: css("--surface"), borderWidth: 1 } } ];
+      return o; } },
+];
+
+{ const ORDER = ["usdcny","eer","policy","yields","cpi","uip","gdp","pmi","prod"];
+  CARDS.sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id)); }
+
+// ---------- meta + table blocks
+const uniq = a => [...new Set(a)];
+const SHORT = { usdcny:"USD/CNY", reer:"REER", neer:"NEER", policy_cn:"China", policy_us:"US", y10_cn:"China", y10_us:"US", cpi_cn:"China", cpi_us:"US",
+  gdp:"China", pmi:"China", prod_cn:"China", prod_us:"US", uip_implied:"UIP-implied", realised_12m:"Realised" };
+function metaHTML(ids) {
+  const m = ids.map(i => S[i]);
+  const links = uniq(m.map(x => x.source_url ? x.source_url.split(" | ")[0] + "||" + x.source : x.source)).map(s => {
+    const [u, name] = s.split("||"); return name ? `<a href="${u}" target="_blank" rel="noopener">${name}</a>` : u; });
+  const latest = ids.length > 1 ? ids.map(i => `${SHORT[i]}: ${fmtDate(S[i].latest_obs)}`).join(" · ") : fmtDate(S[ids[0]].latest_obs);
+  return `<dl class="meta">
+    <dt>Units</dt><dd>${uniq(m.map(x => x.units)).join("; ")}</dd>
+    <dt>Frequency</dt><dd>${uniq(m.map(x => x.frequency)).join("; ")}</dd>
+    <dt>Source</dt><dd>${links.join("; ")}</dd>
+    <dt>Latest obs.</dt><dd><b>${latest}</b></dd>
+    <dt>Transform</dt><dd>${uniq(m.map(x => x.transform)).join(" ")}</dd></dl>`;
+}
+function tableHTML(ids) {
+  const keys = uniq(ids.flatMap(i => pts(i).map(p => p[0]))).sort().slice(-14).reverse();
+  const maps = ids.map(i => Object.fromEntries(pts(i)));
+  const dec = ids[0] === "usdcny" ? 4 : (ids[0].startsWith("policy") ? 3 : 2);
+  return `<table><thead><tr><th>Date</th>${ids.map(i => `<th>${SHORT[i]}</th>`).join("")}</tr></thead><tbody>` +
+    keys.map(k => `<tr><td>${fmtDate(k)}</td>${maps.map(m => `<td>${m[k] == null ? "–" : fmt(m[k], dec)}</td>`).join("")}</tr>`).join("") + `</tbody></table>`;
+}
+
+function buildGrid() {
+  const g = document.getElementById("grid"); g.innerHTML = "";
+  for (const c of CARDS) {
+    const sec = document.createElement("section");
+    sec.className = "card chart-card" + (c.wide ? " wide" : "");
+    sec.innerHTML = `<h3>${c.title}<span class="tag">${c.tag}</span></h3>
+      <p class="take" id="take-${c.id}"></p>
+      <div class="chart" id="ch-${c.id}" role="img" aria-label="${c.title} chart"></div>
+      ${metaHTML(c.ids)}
+      <details><summary>Table view (last 14 observations)</summary>${tableHTML(c.ids)}</details>`;
+    g.appendChild(sec);
+    c.chart = echarts.init(sec.querySelector(".chart"), null, { renderer: "svg" });
+    charts.push(c);
+  }
+}
+function render() {
+  for (const c of CARDS) {
+    document.getElementById("take-" + c.id).textContent = c.take();
+    c.chart.setOption(c.build(), true);
+  }
+}
+
+// ---------- header, tiles, reading
+function header() {
+  const m = DATA.meta;
+  const t = new Date(m.last_successful_refresh_utc);
+  document.getElementById("refresh-local").textContent = t.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  document.getElementById("refresh-utc").textContent = m.last_successful_refresh_utc.replace("T", " ").replace("Z", " UTC");
+  document.getElementById("attempt").textContent = "Last attempt: " + m.last_attempt_utc.replace("T", " ").replace("Z", " UTC");
+  document.getElementById("src-status").innerHTML = Object.entries(m.sources).map(([k, v]) =>
+    `<span class="status ${v.ok ? "ok" : "fail"}"><i>${v.ok ? "✓" : "✕"}</i>${k}${v.ok ? "" : " (failed)"}</span>`).join("");
+  const sp = m.spot || {}, cn = sp.cn10y_daily, us = sp.us10y_daily;
+  document.getElementById("spot-v").textContent = (cn ? `CN ${fmt(cn.value, 2)}%` : "CN n/a") + "  ·  " + (us ? `US ${fmt(us.value, 2)}%` : "US n/a");
+  document.getElementById("spot-s").textContent = [cn && `China Government Bond (ChinaBond): ${fmtDate(cn.date)}`, us && `US Treasury: ${fmtDate(us.date)}`].filter(Boolean).join(" · ");
+  const ageDays = (Date.now() - t.getTime()) / 864e5, el = document.getElementById("stale");
+  const msgs = [];
+  if (ageDays > 3) msgs.push(`⚠ Last successful refresh was ${Math.floor(ageDays)} days ago; the scheduled job may be failing.`);
+  const bad = Object.entries(m.sources).filter(([, v]) => !v.ok).map(([k]) => k);
+  if (bad.length) msgs.push(`⚠ Latest run could not refresh: ${bad.join(", ")}. Charts show the last good data for those sources.`);
+  if (msgs.length) { el.style.display = "block"; el.textContent = msgs.join(" "); }
+}
+function tiles() {
+  const u = pts("usdcny"), lu = last(u), cu = changeOver(u, 12);
+  const re = pts("reer"), lr = last(re), cr = changeOver(re, 12);
+  const pc = last(pts("policy_cn")), pu = last(pts("policy_us"));
+  const sp = last(pts("spread_10y"));
+  const pm = last(pts("pmi")), gd = last(pts("gdp"));
+  const T = [
+    ["USD/CNY", fmt(lu[1], 4), `${fmtDate(lu[0])} · ${cu ? sign(cu.pct) + "% 12m (+ = RMB weaker)" : ""}`],
+    ["Real eff. exchange rate", fmt(lr[1], 1), `${fmtDate(lr[0])} · ${cr ? sign(cr.pct) + "% 12m (+ = stronger)" : ""}`],
+    ["Policy rate gap (CN − US)", sign(pc[1] - pu[1]) + " pp", `${fmtDate(pc[0])} · ${fmt(pc[1], 2)}% vs ${fmt(pu[1], 2)}%`],
+    ["10Y yield spread (CN − US)", sign(sp[1]) + " pp", `${fmtDate(sp[0])} · monthly average`],
+    ["Manufacturing PMI", fmt(pm[1], 1), `${fmtDate(pm[0])} · 50 = no change`],
+    ["Real GDP growth", fmt(gd[1], 1) + "%", `${fmtDate(gd[0])} · y/y`],
+  ];
+  document.getElementById("tiles").innerHTML = T.map(t => `<div class="card tile"><div class="k">${t[0]}</div><div class="v">${t[1]}</div><div class="d">${t[2]}</div></div>`).join("");
+}
+function reading() {
+  const u = pts("usdcny"), cu = changeOver(u, 12), re = pts("reer"), cr = changeOver(re, 12), ne = pts("neer"), cn = changeOver(ne, 12);
+  const i = last(pts("uip_implied")), r = last(pts("realised_12m"));
+  const g = last(pts("cpi_gap")), pm = last(pts("pmi")), sp = last(pts("spread_10y"));
+  const L = [];
+  L.push(`<b>Nominal pressure:</b> USD/CNY is ${fmt(last(u)[1], 3)}, ${cu ? (cu.pct > 0 ? "up" : "down") + " " + Math.abs(cu.pct).toFixed(1) + "% over 12 months (" + (cu.pct > 0 ? "RMB weaker" : "RMB stronger") + " against the dollar)" : ""}; broad nominal index ${cn ? (cn.pct > 0 ? "up " : "down ") + Math.abs(cn.pct).toFixed(1) + "%" : ""}.`);
+  L.push(`<b>Real value:</b> the BIS real effective index is ${fmt(last(re)[1], 1)} (2020 = 100)${cr ? ", " + (cr.pct > 0 ? "up " : "down ") + Math.abs(cr.pct).toFixed(1) + "% over 12 months" : ""}; the real index sits ${last(re)[1] < last(ne)[1] ? "below" : "above"} the nominal one (${fmt(last(ne)[1], 1)}).`);
+  L.push(`<b>Rate gap:</b> China's 10-year yield is ${fmt(Math.abs(sp[1]), 2)} points ${sp[1] < 0 ? "below" : "above"} the US's; UIP implies a ${fmt(i[1], 1)}% annual move in USD/CNY, while the most recent realised 12-month move was ${sign(r[1])}%.`);
+  L.push(`<b>Inflation and activity:</b> China's CPI inflation is ${fmt(Math.abs(g[1]), 1)} points ${g[1] < 0 ? "below" : "above"} the US's; manufacturing PMI is ${fmt(pm[1], 1)} (${pm[1] >= 50 ? "expansion" : "contraction"} territory).`);
+  document.getElementById("reading").innerHTML = L.map(x => `<li>${x}</li>`).join("");
+}
+
+// ---------- controls
+function setRange(n) {
+  RANGE = n;
+  document.querySelectorAll("[data-range]").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.range === n)));
+  render();
+}
+let THEME = "auto";
+try { THEME = localStorage.getItem("theme") || "auto"; } catch (e) {}
+function applyTheme() {
+  if (THEME === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.dataset.theme = THEME;
+  document.getElementById("theme").textContent = "Theme: " + THEME;
+  if (DATA) render();
+}
+document.getElementById("theme").addEventListener("click", () => {
+  THEME = THEME === "auto" ? "light" : THEME === "light" ? "dark" : "auto";
+  try { localStorage.setItem("theme", THEME); } catch (e) {}
+  applyTheme();
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (THEME === "auto" && DATA) render(); });
+document.querySelectorAll("[data-range]").forEach(b => b.addEventListener("click", () => setRange(+b.dataset.range)));
+window.addEventListener("resize", () => charts.forEach(c => c.chart.resize()));
+
+fetch("data/series.json?_=" + Date.now()).then(r => r.json()).then(d => {
+  DATA = d; S = d.series;
+  header(); tiles(); reading(); buildGrid(); applyTheme();
+  window.__ready = true;
+}).catch(e => {
+  document.getElementById("grid").innerHTML = `<div class="card">Could not load data/series.json (${e}). If you opened this file directly, serve the folder over HTTP (python3 -m http.server).</div>`;
+});
+</script>
+</body>
+</html>

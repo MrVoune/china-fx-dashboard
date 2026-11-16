@@ -1,0 +1,242 @@
+{
+ "https://www.stats.gov.cn/english/PressRelease/202406/t20240605_1954265.html": {
+  "date": "2024-05",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202406/t20240605_1954265.html",
+  "value": 49.5
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202407/t20240703_1955367.html": {
+  "date": "2024-06",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202407/t20240703_1955367.html",
+  "value": 49.5
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202407/t20240730_1955894.html": {
+  "date": "2024-Q2",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202407/t20240730_1955894.html",
+  "value": 4.7
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202408/t20240806_1955936.html": {
+  "date": "2024-07",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202408/t20240806_1955936.html",
+  "value": 49.4
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202409/t20240905_1956261.html": {
+  "date": "2024-08",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202409/t20240905_1956261.html",
+  "value": 49.1
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202410/t20241010_1956863.html": {
+  "date": "2024-09",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202410/t20241010_1956863.html",
+  "value": 49.8
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202410/t20241025_1957137.html": {
+  "date": "2024-Q3",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202410/t20241025_1957137.html",
+  "value": 4.6
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202411/t20241115_1957434.html": {
+  "date": "2024-10",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202411/t20241115_1957434.html",
+  "value": 50.1
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202412/t20241204_1957641.html": {
+  "date": "2024-11",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202412/t20241204_1957641.html",
+  "value": 50.3
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202501/t20250107_1958155.html": {
+  "date": "2024-12",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202501/t20250107_1958155.html",
+  "value": 50.1
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202502/t20250207_1958578.html": {
+  "date": "2024-Q4",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202502/t20250207_1958578.html",
+  "value": 5.4
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202502/t20250210_1958651.html": {
+  "date": "2025-01",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202502/t20250210_1958651.html",
+  "value": 49.1
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202503/t20250307_1958911.html": {
+  "date": "2025-02",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202503/t20250307_1958911.html",
+  "value": 50.2
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202504/t20250408_1959247.html": {
+  "date": "2025-03",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202504/t20250408_1959247.html",
+  "value": 50.5
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202504/t20250421_1959377.html": {
+  "date": "2025-Q1",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202504/t20250421_1959377.html",
+  "value": 5.4
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202505/t20250507_1959690.html": {
+  "date": "2025-04",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202505/t20250507_1959690.html",
+  "value": 49.0
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202506/t20250605_1960075.html": {
+  "date": "2025-05",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202506/t20250605_1960075.html",
+  "value": 49.5
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202507/t20250707_1960346.html": {
+  "date": "2025-06",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202507/t20250707_1960346.html",
+  "value": 49.7
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202507/t20250728_1960507.html": {
+  "date": "2025-Q2",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202507/t20250728_1960507.html",
+  "value": 5.2
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202508/t20250807_1960606.html": {
+  "date": "2025-07",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202508/t20250807_1960606.html",
+  "value": 49.3
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202509/t20250903_1960997.html": {
+  "date": "2025-08",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202509/t20250903_1960997.html",
+  "value": 49.4
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202510/t20251010_1961466.html": {
+  "date": "2025-09",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202510/t20251010_1961466.html",
+  "value": 49.8
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202510/t20251027_1961697.html": {
+  "date": "2025-Q3",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202510/t20251027_1961697.html",
+  "value": 4.8
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202511/t20251103_1961770.html": {
+  "date": "2025-10",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202511/t20251103_1961770.html",
+  "value": 49.0
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202512/t20251202_1961963.html": {
+  "date": "2025-11",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202512/t20251202_1961963.html",
+  "value": 49.2
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202601/t20260108_1962265.html": {
+  "date": "2025-12",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202601/t20260108_1962265.html",
+  "value": 50.1
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202601/t20260121_1962363.html": {
+  "date": "2025-Q4",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202601/t20260121_1962363.html",
+  "value": 4.5
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202602/t20260202_1962478.html": {
+  "date": "2026-01",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202602/t20260202_1962478.html",
+  "value": 49.3
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202603/t20260305_1962714.html": {
+  "date": "2026-02",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202603/t20260305_1962714.html",
+  "value": 49.0
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202604/t20260401_1962920.html": {
+  "date": "2026-03",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202604/t20260401_1962920.html",
+  "value": 50.4
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202604/t20260420_1963362.html": {
+  "date": "2026-Q1",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202604/t20260420_1963362.html",
+  "value": 5.0
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202605/t20260506_1963595.html": {
+  "date": "2026-04",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202605/t20260506_1963595.html",
+  "value": 50.3
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html": {
+  "date": "2026-05",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html",
+  "value": 50.0
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202607/t20260701_1964047.html": {
+  "date": "2026-06",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202607/t20260701_1964047.html",
+  "value": 50.3
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202607/t20260717_1964160.html": {
+  "date": "2026-Q2",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202607/t20260717_1964160.html",
+  "value": 4.3
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202608/t20260803_1964272.html": {
+  "date": "2026-07",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202608/t20260803_1964272.html",
+  "value": 49.2
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202609/t20260901_1965170.html": {
+  "date": "2026-08",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202609/t20260901_1965170.html",
+  "value": 49.8
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202610/t20261008_1965466.html": {
+  "date": "2026-09",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202610/t20261008_1965466.html",
+  "value": 50.1
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202610/t20261021_1965671.html": {
+  "date": "2026-Q3",
+  "kind": "gdp",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202610/t20261021_1965671.html",
+  "value": 4.5
+ },
+ "https://www.stats.gov.cn/english/PressRelease/202611/t20261103_1965735.html": {
+  "date": "2026-10",
+  "kind": "pmi",
+  "url": "https://www.stats.gov.cn/english/PressRelease/202611/t20261103_1965735.html",
+  "value": 49.3
+ }
+}
