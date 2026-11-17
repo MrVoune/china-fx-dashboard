@@ -4,7 +4,7 @@ PASS | BIS neer                     | obs 2026-09    | dashboard   113.4200 | so
 PASS | BIS policy_cn                | obs 2026-10    | dashboard     3.0000 | source     3.0000 | tol 0.0001 | BIS WS_CBPOL (period 2026-10) | fresh lastNObservations=1 request
 PASS | BIS policy_us                | obs 2026-10    | dashboard     3.8750 | source     3.8750 | tol 0.0001 | BIS WS_CBPOL (period 2026-10) | fresh lastNObservations=1 request
 PASS | US 10Y (monthly mean)        | obs 2026-10    | dashboard     5.1300 | source     5.1310 | tol 0.06 | US Treasury daily par yield curve | mean of 21 daily obs (OECD uses monthly avg)
-PASS | China 10Y (sanity)           | obs 2026-09    | dashboard     1.6800 | source     1.6285 | tol 0.2 | ChinaBond curve 2026-11-16 | different date (daily vs monthly avg): level sanity check only
+PASS | China 10Y (sanity)           | obs 2026-09    | dashboard     1.6800 | source     1.6055 | tol 0.2 | ChinaBond curve 2026-11-17 | different date (daily vs monthly avg): level sanity check only
 PASS | China CPI y/y                | obs 2026-10    | dashboard     0.7000 | source     0.7000 | tol 0.05 | NBS press release | OECD value vs NBS release text
 PASS | US CPI y/y                   | obs 2026-09    | dashboard     3.7377 | source     3.7377 | tol 0.06 | US BLS CPI-U (CUUR0000SA0) | index 336.94 vs 324.8 a year earlier
 PASS | NBS PMI                      | obs 2026-10    | dashboard       49.3 | value found in https://www.stats.gov.cn/english/PressRelease/202611/t20261103_1965735.html
@@ -12,4 +12,4 @@ PASS | NBS GDP                      | obs 2026-Q3    | dashboard        4.5 | va
 PASS | World Bank prod_cn           | obs 2025       | dashboard     5.0010 | source     5.0006 | tol 0.001 | World Bank WDI API | growth recomputed from two levels
 PASS | World Bank prod_us           | obs 2025       | dashboard     1.9580 | source     1.9578 | tol 0.001 | World Bank WDI API | growth recomputed from two levels
 
-ALL CHECKS PASSED at 2026-11-16 23:34 UTC
+ALL CHECKS PASSED at 2026-11-17 10:55 UTC
