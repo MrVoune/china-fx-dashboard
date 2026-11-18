@@ -25,3 +25,12 @@
 2026-11-17T10:55:04Z OK   daily 10Y: us10y_daily=5.12 (2026-11-16), cn10y_daily=1.6055 (2026-11-17)
 2026-11-17T10:55:04Z RESULT all_sources_ok=True
 ---
+2026-11-18T10:25:56Z OK   Federal Reserve H.10: usdcny=2966pts latest=2026-11-13
+2026-11-18T10:25:56Z OK   BIS: reer=141pts latest=2026-09, neer=141pts latest=2026-09, policy_cn=142pts latest=2026-10, policy_us=142pts latest=2026-10
+2026-11-18T10:25:56Z OK   OECD: y10_cn=141pts latest=2026-09, y10_us=142pts latest=2026-10, cpi_cn=142pts latest=2026-10, cpi_us=140pts latest=2026-09
+2026-11-18T10:25:56Z FAIL World Bank: GET failed https://api.worldbank.org/v2/country/CHN;USA/indicator/SL.GDP.PCAP.EM.KD?format=json&per_page=500&date=2005:2026: The read operation timed out
+2026-11-18T10:25:56Z NBS crawl: 3 index pages, 0 new release pages, 30 PMI obs, 10 GDP obs
+2026-11-18T10:25:56Z OK   NBS China: pmi=30pts latest=2026-10, gdp=10pts latest=2026-Q3
+2026-11-18T10:25:56Z OK   daily 10Y: us10y_daily=5.1 (2026-11-17), cn10y_daily=1.5892 (2026-11-18)
+2026-11-18T10:25:56Z RESULT all_sources_ok=False
+---
