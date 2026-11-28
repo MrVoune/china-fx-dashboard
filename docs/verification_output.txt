@@ -12,4 +12,4 @@ PASS | NBS GDP                      | obs 2026-Q3    | dashboard        4.5 | va
 PASS | World Bank prod_cn           | obs 2025       | dashboard     5.0010 | source     5.0006 | tol 0.001 | World Bank WDI API | growth recomputed from two levels
 PASS | World Bank prod_us           | obs 2025       | dashboard     1.9580 | source     1.9578 | tol 0.001 | World Bank WDI API | growth recomputed from two levels
 
-ALL CHECKS PASSED at 2026-11-27 11:05 UTC
+ALL CHECKS PASSED at 2026-11-28 10:41 UTC
